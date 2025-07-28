@@ -1,11 +1,71 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+  <meta charset="UTF-8">
+  <title>Number Guessing Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    #game {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
 
+  <h1>Number Guessing Game</h1>
+  <div id="game">
+    <p id="prompt">Guess a number between 1 and 10:</p>
+    <input type="number" id="guessInput" min="1" max="10">
+    <button onclick="checkGuess()">Submit Guess</button>
+    <p id="feedback"></p>
+    <p id="summary"></p>
+  </div>
+
+  <script>
+    let playAgain = true;
+
+    function startGame() {
+      const randomNumber = Math.floor(Math.random() * 10) + 1;
+      // console.log("Secret number:", randomNumber); // Optional: comment out or remove
+      let attempts = 0;
+
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("summary").textContent = "";
+
+      window.checkGuess = function () {
+        const userGuess = parseInt(document.getElementById("guessInput").value);
+        attempts++;
+
+        if (isNaN(userGuess) || userGuess < 1 || userGuess > 10) {
+          document.getElementById("feedback").textContent = "Please enter a valid number between 1 and 10.";
+          return;
+        }
+
+        if (userGuess > randomNumber) {
+          document.getElementById("feedback").textContent = "Your guess is too high. Guess again.";
+        } else if (userGuess < randomNumber) {
+          document.getElementById("feedback").textContent = "Your guess is too low. Guess again.";
+        } else {
+          document.getElementById("feedback").textContent = "🎉 Your guess was correct!";
+          document.getElementById("summary").textContent = `You made ${attempts} guess${attempts > 1 ? "es" : ""}.`;
+
+          setTimeout(() => {
+            if (confirm("Would you like to play again?")) {
+              document.getElementById("guessInput").value = "";
+              startGame();
+            } else {
+              document.getElementById("prompt").textContent = "Thanks for playing!";
+              document.getElementById("guessInput").style.display = "none";
+            }
+          }, 100);
+        }
+      };
+    }
+
+    startGame();
+  </script>
 </body>
 </html>
